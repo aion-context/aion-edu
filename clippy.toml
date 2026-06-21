@@ -1,0 +1,4 @@
+# Tiger Style — functions should be short and obvious.
+too-many-lines-threshold = 60
+msrv = "1.85"
+avoid-breaking-exported-api = false

@@ -1,0 +1,20 @@
+[package]
+name = "aion-edu-cli"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "aion-edu"
+path = "src/main.rs"
+
+[dependencies]
+aion-edu-core.workspace = true
+aion-edu-provenance.workspace = true
+aion-edu-teach.workspace = true
+aion-edu-web.workspace = true
+serde_json.workspace = true
+# Linked only so their inventory::submit! entries register at startup.
+aion-edu-faculty.workspace = true
+aion-edu-curriculum.workspace = true

@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/aion-edu-core",
+    "crates/aion-edu-provenance",
+    "crates/aion-edu-teach",
+    "crates/aion-edu-web",
+    "crates/aion-edu-faculty",
+    "crates/aion-edu-curriculum",
+    "crates/aion-edu-cli",
+]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/aion-context/aion-edu"
+
+[workspace.dependencies]
+aion-edu-core = { path = "crates/aion-edu-core" }
+aion-edu-provenance = { path = "crates/aion-edu-provenance" }
+aion-edu-teach = { path = "crates/aion-edu-teach" }
+aion-edu-web = { path = "crates/aion-edu-web" }
+aion-edu-faculty = { path = "crates/aion-edu-faculty" }
+aion-edu-curriculum = { path = "crates/aion-edu-curriculum" }
+aion-context = { path = "../aion-context" }
+inventory = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

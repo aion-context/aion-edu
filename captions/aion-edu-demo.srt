@@ -1,0 +1,349 @@
+1
+00:00:00,000 --> 00:00:05,617
+A seal, pressed in wax, once carried
+the full weight of a person's word.
+
+2
+00:00:05,617 --> 00:00:10,064
+Unbroken, it meant: this is
+true — and I stand behind it.
+
+3
+00:00:10,064 --> 00:00:14,121
+aion-edu is a university
+built on that same promise.
+
+4
+00:00:14,121 --> 00:00:17,398
+Only now, the seal is made of mathematics.
+
+5
+00:00:17,398 --> 00:00:19,592
+A diploma is a claim about you.
+
+6
+00:00:19,592 --> 00:00:23,344
+But a claim is only as strong
+as the trust behind it.
+
+7
+00:00:23,344 --> 00:00:27,025
+Today that trust lives in
+a database you cannot see,
+
+8
+00:00:27,025 --> 00:00:30,069
+guarded by an institution
+you have to call.
+
+9
+00:00:30,069 --> 00:00:33,750
+The proof is always somewhere
+else — never with you.
+
+10
+00:00:33,750 --> 00:00:36,800
+aion-edu changes where the proof lives.
+
+11
+00:00:36,800 --> 00:00:43,211
+Every rubric, every credential, every act
+of accreditation is signed, and chained,
+
+12
+00:00:43,211 --> 00:00:48,762
+and sealed, on aion-context: a ledger
+that cannot be quietly rewritten.
+
+13
+00:00:48,762 --> 00:00:51,968
+Alter a single byte, and the seal breaks.
+
+14
+00:00:51,968 --> 00:00:56,660
+The proof travels with the
+document — and answers to no one.
+
+15
+00:00:56,660 --> 00:00:58,186
+And who teaches here?
+
+16
+00:00:58,186 --> 00:01:00,440
+The people who built the field.
+
+17
+00:01:00,440 --> 00:01:05,819
+Each professor is a faithful reconstruction
+of a master — Lamport on time,
+
+18
+00:01:05,819 --> 00:01:09,962
+Turing on the limits of the
+machine, Noether on symmetry,
+
+19
+00:01:09,962 --> 00:01:12,143
+Shannon on information itself.
+
+20
+00:01:12,143 --> 00:01:13,597
+They teach you live.
+
+21
+00:01:13,597 --> 00:01:14,978
+They hold the line.
+
+22
+00:01:14,978 --> 00:01:19,412
+And they grade you against a
+rubric not even they can change.
+
+23
+00:01:19,412 --> 00:01:21,505
+It is one unbroken chain.
+
+24
+00:01:21,505 --> 00:01:24,770
+You learn — face to face with a master.
+
+25
+00:01:24,770 --> 00:01:29,961
+You earn — a credential, sealed
+to the exact standard you met.
+
+26
+00:01:29,961 --> 00:01:36,742
+Institutions federate, recognizing one
+another across a shared register of trust.
+
+27
+00:01:36,742 --> 00:01:43,523
+And anyone, anywhere, can verify — your
+diploma, proven offline, forgery refused.
+
+28
+00:01:43,523 --> 00:01:47,112
+And aion-edu is not a
+rival to the university —
+
+29
+00:01:47,112 --> 00:01:50,395
+it is a new layer the
+university can adopt.
+
+30
+00:01:50,395 --> 00:01:54,671
+The institution brings its
+curriculum and its standards.
+
+31
+00:01:54,671 --> 00:01:59,099
+aion-edu brings faculty who
+teach them live, at any scale.
+
+32
+00:01:59,099 --> 00:02:03,985
+And aion-context seals every
+credential to that exact standard —
+
+33
+00:02:03,985 --> 00:02:06,276
+one shared record of accuracy.
+
+34
+00:02:06,276 --> 00:02:12,184
+For the institution, that means reaching
+the world without ever diluting its degree
+
+35
+00:02:12,184 --> 00:02:14,960
+— issuing credentials no one can forge.
+
+36
+00:02:14,960 --> 00:02:20,869
+And for the student, it means proof that
+is, at last, provably their own: portable,
+
+37
+00:02:20,869 --> 00:02:23,360
+permanent, and verifiable anywhere.
+
+38
+00:02:23,360 --> 00:02:29,776
+This is a university where your
+achievement is yours — provable, portable,
+
+39
+00:02:29,776 --> 00:02:30,676
+permanent.
+
+40
+00:02:30,676 --> 00:02:33,623
+Sealed in proof, not in paperwork.
+
+41
+00:02:33,623 --> 00:02:35,324
+Welcome to aion-edu.
+
+42
+00:02:35,280 --> 00:02:39,760
+We begin as any student does —
+with a name, and an ambition.
+
+43
+00:02:39,760 --> 00:02:44,763
+The moment you enroll, aion-edu
+mints you a cryptographic identity,
+
+44
+00:02:44,763 --> 00:02:46,704
+a key that is yours alone.
+
+45
+00:02:46,704 --> 00:02:52,678
+And it lays out your path: the exact
+lessons, and the masters who'll teach them.
+
+46
+00:02:52,678 --> 00:02:55,286
+Press begin, and class is in session.
+
+47
+00:02:55,286 --> 00:02:56,696
+This is not a video.
+
+48
+00:02:56,696 --> 00:03:01,701
+The professor reasons with you, in
+their own voice — and then they ask.
+
+49
+00:03:01,701 --> 00:03:03,746
+You answer in your own words.
+
+50
+00:03:03,746 --> 00:03:09,527
+There are no multiple-choice shortcuts
+here; mastery is something you demonstrate.
+
+51
+00:03:09,527 --> 00:03:13,790
+When you've met every outcome,
+the professor records mastery —
+
+52
+00:03:13,790 --> 00:03:15,646
+and a credential is sealed.
+
+53
+00:03:15,646 --> 00:03:17,297
+Signed by the professor.
+
+54
+00:03:17,297 --> 00:03:20,666
+Bound to the very rubric
+you were graded against.
+
+55
+00:03:20,666 --> 00:03:23,554
+Untamperable from the moment it is struck.
+
+56
+00:03:23,554 --> 00:03:27,988
+It lands in your transcript — a
+wallet of everything you have proven.
+
+57
+00:03:27,988 --> 00:03:31,522
+Each credential carries its
+own proof, ready to travel.
+
+58
+00:03:31,522 --> 00:03:35,785
+Hand it to another institution,
+and watch what happens.
+
+59
+00:03:35,785 --> 00:03:41,210
+Accepted — because they recognize
+the university that vouched for you.
+
+60
+00:03:41,210 --> 00:03:43,070
+And to one that doesn't?
+
+61
+00:03:43,070 --> 00:03:45,705
+Rejected — instantly, and offline.
+
+62
+00:03:45,705 --> 00:03:47,256
+The same credential.
+
+63
+00:03:47,256 --> 00:03:50,356
+The trust turns entirely on recognition.
+
+64
+00:03:50,356 --> 00:03:55,446
+Download the diploma, and you hold
+the whole proof in a single file.
+
+65
+00:03:55,446 --> 00:04:01,359
+Anyone — with nothing but this file and
+a verifier — can confirm it is genuine.
+
+66
+00:04:01,359 --> 00:04:04,054
+Change one grade, and it is refused.
+
+67
+00:04:04,054 --> 00:04:05,925
+The seal cannot be faked.
+
+68
+00:04:05,925 --> 00:04:08,129
+Behind it all is the federation,
+
+69
+00:04:08,129 --> 00:04:12,814
+where institutions establish trust
+as deliberately as they grant it.
+
+70
+00:04:12,814 --> 00:04:14,674
+They recognize one another.
+
+71
+00:04:14,674 --> 00:04:19,014
+They co-accredit joint degrees,
+requiring signatures from both.
+
+72
+00:04:19,014 --> 00:04:22,459
+They can delegate trust,
+and they can withdraw it.
+
+73
+00:04:22,459 --> 00:04:27,006
+And they can checkpoint the entire
+state, signed, for any dispute.
+
+74
+00:04:27,006 --> 00:04:32,065
+A university that teaches like
+the greatest minds in history —
+
+75
+00:04:32,065 --> 00:04:34,840
+and credentials like cryptography.
+
+76
+00:04:34,840 --> 00:04:35,740
+aion-edu.
+
+77
+00:04:35,740 --> 00:04:36,880
+Sealed in proof.

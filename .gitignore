@@ -1,0 +1,22 @@
+# ── Build artifacts ──────────────────────────────────────────────
+/target/
+
+# ── Runtime data — CONTAINS Ed25519 SIGNING KEYS. Never commit. ──
+/aion-edu-data/
+
+# ── Secrets / credentials — never commit ────────────────────────
+*.env
+*.key
+*.pem
+*.p12
+.creds/
+!*.env.example
+
+# ── Generated media (regenerate with tools/) — large, keep local ─
+/narration/
+/recordings/
+
+# ── OS / editor noise ───────────────────────────────────────────
+.DS_Store
+*.swp
+*~

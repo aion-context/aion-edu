@@ -1,0 +1,16 @@
+[package]
+name = "aion-edu-web"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+aion-edu-core.workspace = true
+aion-edu-provenance.workspace = true
+aion-edu-teach.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+axum = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "net"] }
+tokio-stream = "0.1"

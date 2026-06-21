@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aion-edu · classroom</title>
+<link rel="stylesheet" href="/app.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="topbar">
+  <a class="lockup" href="/">
+    <svg class="seal" viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+      <circle class="seal-edge" cx="32" cy="32" r="29"/>
+      <g class="seal-node">
+        <circle cx="58" cy="32" r="1.4"/><circle cx="54.5" cy="45" r="1.4"/><circle cx="45" cy="54.5" r="1.4"/>
+        <circle cx="32" cy="58" r="1.4"/><circle cx="19" cy="54.5" r="1.4"/><circle cx="9.5" cy="45" r="1.4"/>
+        <circle cx="6" cy="32" r="1.4"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="19" cy="9.5" r="1.4"/>
+        <circle cx="32" cy="6" r="1.4"/><circle cx="45" cy="9.5" r="1.4"/><circle cx="54.5" cy="19" r="1.4"/>
+      </g>
+      <circle class="seal-frame" cx="32" cy="32" r="21"/>
+      <text class="seal-mono" x="32" y="33" text-anchor="middle" dominant-baseline="central">&#198;</text>
+    </svg>
+    <span class="wm"><span class="wm__name">aion<i class="wm__sep">·</i>edu</span>
+      <span class="wm__tag">taught live · sealed in proof</span></span>
+  </a>
+  <div class="topbar__right"><a class="navlink" href="/federate">Accreditation federation →</a></div>
+</header>
+<div class="shell">
+  <aside class="sidebar">
+    <p class="eyebrow">Enroll</p>
+    <div class="field"><span class="lbl">Your name</span>
+      <input id="learner" class="input" type="text" placeholder="your name" value="dj"></div>
+    <div class="field"><span class="lbl">Target — lesson, course, or concept</span>
+      <input id="target" class="input" type="text" list="targets" placeholder="e.g. math110 · Linearizability">
+      <datalist id="targets"></datalist></div>
+    <label class="check" style="margin:2px 0 14px"><input type="checkbox" id="watch"> watch a demo (auto-student)</label>
+    <button id="enroll" class="btn btn--primary btn--block">Enroll</button>
+    <div style="height:8px"></div>
+    <button id="go" class="btn btn--ghost btn--block" disabled>Begin lesson ▸</button>
+    <p class="eyebrow" style="margin-top:26px">Catalog</p>
+    <div id="catalog" class="empty">loading…</div>
+  </aside>
+  <main class="main">
+    <div id="student" class="card idcard hidden" style="margin-bottom:16px"></div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div id="pathPanel" class="panel hidden"><p class="eyebrow">Your path</p><div id="path"></div></div>
+      <div id="transcript" class="panel hidden"><p class="eyebrow">Transcript · credential wallet</p><div id="tlist"></div></div>
+    </div>
+    <p class="eyebrow">Classroom</p>
+    <div id="feed" class="feed"><p class="empty">Enter your name and a target, then press <b>Enroll</b> to get your
+      cryptographic student identity and a guided path. Press <b>Begin lesson</b> and a professor teaches
+      you live — answer in your own words to master each outcome and earn a verifiable credential.
+      (Tick <b>watch a demo</b> to let the simulated student drive.)</p></div>
+    <div id="reply" class="replybar">
+      <input id="replyText" class="input" type="text" placeholder="the professor is waiting — type your answer…" autocomplete="off">
+      <button id="send" class="btn btn--primary">Send</button>
+    </div>
+  </main>
+</div>
+<script>
+const $=s=>document.querySelector(s), feed=$('#feed'); let es=null, enrolled=null;
+const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function add(cls,html){const d=document.createElement('div');d.className='ev '+cls;d.innerHTML=html;
+  feed.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});return d;}
+async function loadCatalog(){
+  const c=await(await fetch('/api/catalog')).json(), box=$('#catalog'), dl=$('#targets');
+  box.innerHTML='';dl.innerHTML='';
+  for(const co of c){
+    const o=document.createElement('option');o.value=co.id;o.label=co.title;dl.appendChild(o);
+    const el=document.createElement('div');el.className='course';
+    el.innerHTML=`<div class="t">${esc(co.title)}</div><div class="p">Prof. ${esc(co.professor)}</div>`;
+    for(const l of co.lessons){
+      const op=document.createElement('option');op.value=l.id;op.label=l.title;dl.appendChild(op);
+      const ln=document.createElement('div');ln.className='l';ln.textContent='› '+l.title;
+      ln.onclick=()=>{$('#target').value=l.id};el.appendChild(ln);
+    }
+    box.appendChild(el);
+  }
+}
+// ── onboarding ──
+async function enroll(){
+  const student=$('#learner').value.trim(), target=$('#target').value.trim();
+  if(!student||!target){add('err','Enter your name and a target first.');return;}
+  const r=await(await fetch('/api/enroll',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student,target})})).json();
+  if(!r.ok){add('err','No catalog match for "'+esc(target)+'".');return;}
+  enrolled=r; renderStudent(r); renderPath(r); await loadTranscript(student);
+  $('#go').disabled=false;
+  const next=r.path.find(x=>!x.mastered);
+  feed.innerHTML='<p class="empty">Welcome, <b>'+esc(student)+'</b>. You hold a cryptographic identity now. '+
+    (next?'Next up: <b>'+esc(next.title)+'</b> with Prof. '+esc(next.professor)+'. ':'')+
+    'Press <b>Begin lesson ▸</b> to start.</p>';
+}
+function renderStudent(r){
+  $('#student').classList.remove('hidden');
+  $('#student').innerHTML=`<span class="badge">enrolled</span> &nbsp;<b>${esc(r.student)}</b>
+    &nbsp;·&nbsp; identity key <code>${esc(r.key_fp)}…</code>
+    &nbsp;·&nbsp; enrolled epoch ${r.epoch}
+    &nbsp;·&nbsp; progress <b>${r.done}/${r.total}</b> mastered`;
+}
+function renderPath(r){
+  $('#pathPanel').classList.remove('hidden');
+  const next=r.path.find(x=>!x.mastered);
+  let html=r.path.map(x=>{
+    const cls=x.mastered?'done':(next&&x.lesson===next.lesson?'next':'todo');
+    const mk=x.mastered?'✓':(cls==='next'?'▶':'·');
+    return `<div class="step ${cls}"><span class="mk">${mk}</span><b>${esc(x.title)}</b>
+      <span class="pf">&nbsp;Prof. ${esc(x.professor)}</span><span class="lid">${esc(x.lesson)}</span></div>`;
+  }).join('');
+  if(r.external_prereqs&&r.external_prereqs.length)
+    html+=`<div class="step todo"><span class="mk">·</span>assumes: ${r.external_prereqs.map(esc).join(', ')}</div>`;
+  $('#path').innerHTML=html||'<span class="empty">nothing to teach (already mastered)</span>';
+}
+async function loadTranscript(student){
+  const r=await(await fetch('/api/transcript?student='+encodeURIComponent(student))).json();
+  $('#transcript').classList.remove('hidden');
+  if(!r.credentials.length){$('#tlist').innerHTML='<span class="empty">no credentials yet — master a lesson to earn your first.</span>';return;}
+  $('#tlist').innerHTML=r.credentials.map(c=>`<div class="cred-row" data-lesson="${esc(c.lesson)}">
+    ${c.valid?'<span class="ok">◆</span>':'<span class="bad">✗</span>'}
+    <b>${esc(c.lesson)}</b> <span class="pf">Prof. ${esc(c.professor)}</span>
+    <code>#${esc(String(c.file_id))}</code> ${c.bound?'<span class="bound">rubric-bound</span>':''}
+    <a class="dlbtn" href="/api/diploma?student=${encodeURIComponent(student)}&lesson=${encodeURIComponent(c.lesson)}"
+       download="diploma-${esc(student)}-${esc(c.lesson)}.json">⤓ Download diploma</a>
+    <button class="vbtn">✓ Verify offline</button><span class="vverdict"></span>
+    <div class="present">present to <input class="pinp" value="partner-u">
+      <button class="pbtn">Present ▸</button><span class="verdict"></span></div>
+  </div>`).join('');
+}
+const HOME='aion-edu';
+const mk=x=>x?'✓':'✗';
+async function presentCred(lesson, partner, verdictEl){
+  if(!enrolled)return;
+  verdictEl.innerHTML='<small>…</small>';
+  const body={learner:enrolled.student, lesson, issuer:HOME, to:partner};
+  const j=await(await fetch('/api/fed/present',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+  if(j.ok===false){verdictEl.innerHTML='<span class="no">'+esc(j.msg)+'</span>';return;}
+  verdictEl.innerHTML=(j.accepted?'<span class="yes">✓ ACCEPTED</span>':'<span class="no">✗ REJECTED</span>')+
+    ` <small>valid ${mk(j.credential_valid)} · delegated ${mk(j.faculty_delegated)} · vouched ${mk(j.issuer_vouched)} · recognized ${mk(j.issuer_recognized)} by ${esc(partner)}</small>`;
+}
+async function verifyDiploma(lesson, el){
+  if(!enrolled)return;
+  el.innerHTML='<small>…</small>';
+  // fetch the diploma as RAW TEXT and pass it through verbatim — parsing it as
+  // JSON in JS would round u64 file_ids through Number and corrupt them.
+  const dipText=await(await fetch('/api/diploma?student='+encodeURIComponent(enrolled.student)+'&lesson='+encodeURIComponent(lesson))).text();
+  const v=await(await fetch('/api/verify-diploma',{method:'POST',headers:{'Content-Type':'application/json'},body:dipText})).json();
+  el.innerHTML=(v.authentic?'<span class="yes">✓ AUTHENTIC</span>':'<span class="no">✗ NOT AUTHENTIC</span>')+
+    ` <small>credential ${mk(v.credential_verifies)} · file_id ${mk(v.file_id_match)} · claims ${mk(v.claims_match)}</small>`;
+}
+// one delegated listener for present + verify buttons in the wallet
+$('#tlist').addEventListener('click', ev=>{
+  const row=ev.target.closest('.cred-row'); if(!row)return;
+  if(ev.target.classList.contains('pbtn'))
+    presentCred(row.dataset.lesson, row.querySelector('.pinp').value.trim()||'partner-u', row.querySelector('.verdict'));
+  else if(ev.target.classList.contains('vbtn'))
+    verifyDiploma(row.dataset.lesson, row.querySelector('.vverdict'));
+});
+async function refreshProgress(){
+  if(!enrolled)return;
+  const r=await(await fetch('/api/enroll',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student:enrolled.student,target:enrolled.target})})).json();
+  if(r.ok){enrolled=r;renderStudent(r);renderPath(r);}
+  await loadTranscript(enrolled.student);
+}
+// ── live classroom ──
+let sid=null, lastProf=null;
+const reply=$('#reply'), replyText=$('#replyText');
+function awaitInput(on){reply.classList.toggle('on',on);if(lastProf)lastProf.classList.toggle('awaiting',on);if(on){replyText.disabled=false;replyText.focus();}}
+async function sendReply(){
+  const t=replyText.value.trim(); if(!t||!sid)return;
+  replyText.value='';replyText.disabled=true;awaitInput(false);
+  await fetch(`/api/session/${sid}/reply`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
+}
+function handle(e){
+  const k=e.kind;
+  if(k==='plan')add('status','Path: '+(e.path.join(' → ')||'(nothing to teach)'));
+  else if(k==='lesson_start')add('lesson','▶ Lesson '+e.lesson);
+  else if(k==='status')add('status',esc(e.text));
+  else if(k==='professor')lastProf=add('prof','<span class="who">Professor</span><div class="body">'+esc(e.text)+'</div>');
+  else if(k==='ask')lastProf=add('prof','<span class="who">Professor → you</span><div class="body">'+esc(e.text)+'</div>');
+  else if(k==='await_input')awaitInput(true);
+  else if(k==='learner')add('learn','<span class="who">'+esc(e.who)+'</span><div class="body">'+esc(e.text)+'</div>');
+  else if(k==='tool')add('tool '+(e.rc===0?'pass':'fail'),'$ '+esc(e.cmd)+'  →  rc='+e.rc);
+  else if(k==='result'){add('cred','<b>◆ Credential issued.</b> file_id <code>'+esc(String(e.credential_file_id))+'</code> · mastered '+e.mastered+' · binding '+(e.binding_verified?'verified':'UNVERIFIED'));refreshProgress();}
+  else if(k==='halt')add('err','Stopped: '+esc(e.text));
+  else if(k==='error'){add('err','Error: '+esc(e.text));end();}
+  else if(k==='done'){add('status','✦ '+esc(e.text));refreshProgress();end();}
+}
+async function go(){
+  if(!enrolled){await enroll();if(!enrolled)return;}
+  const learner=enrolled.student, target=enrolled.target;
+  if(es)es.close();
+  feed.innerHTML='';lastProf=null;$('#go').disabled=true;
+  const mode=$('#watch').checked?'auto':'interactive';
+  add('status','Beginning… ('+(mode==='auto'?'watching a demo':'you are the learner')+')');
+  const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({learner,target,mode})});
+  if(!r.ok){add('err','Could not start session.');$('#go').disabled=false;return;}
+  sid=(await r.json()).sid;
+  es=new EventSource(`/api/session/${sid}/stream`);
+  es.onmessage=ev=>handle(JSON.parse(ev.data));
+  es.onerror=()=>{if(!reply.classList.contains('on')){add('err','Stream closed.');end();}};
+}
+function end(){if(es)es.close();awaitInput(false);$('#go').disabled=false;}
+$('#enroll').onclick=enroll;
+$('#go').onclick=go;
+$('#send').onclick=sendReply;
+replyText.addEventListener('keydown',e=>{if(e.key==='Enter')sendReply();});
+loadCatalog();
+</script>
+</body>
+</html>

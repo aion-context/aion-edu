@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aion-edu · accreditation federation</title>
+<link rel="stylesheet" href="/app.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  .fedmain { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); align-items: start; }
+  @media (max-width: 900px) { .fedmain { grid-template-columns: 1fr; } }
+  .fedmain .span { grid-column: 1 / -1; }
+  .colhead { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-base); }
+  #verdict { margin-top: var(--sp-2); font-size: var(--fs-base); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="lockup" href="/">
+    <svg class="seal" viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+      <circle class="seal-edge" cx="32" cy="32" r="29"/>
+      <g class="seal-node">
+        <circle cx="58" cy="32" r="1.4"/><circle cx="54.5" cy="45" r="1.4"/><circle cx="45" cy="54.5" r="1.4"/>
+        <circle cx="32" cy="58" r="1.4"/><circle cx="19" cy="54.5" r="1.4"/><circle cx="9.5" cy="45" r="1.4"/>
+        <circle cx="6" cy="32" r="1.4"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="19" cy="9.5" r="1.4"/>
+        <circle cx="32" cy="6" r="1.4"/><circle cx="45" cy="9.5" r="1.4"/><circle cx="54.5" cy="19" r="1.4"/>
+      </g>
+      <circle class="seal-frame" cx="32" cy="32" r="21"/>
+      <text class="seal-mono" x="32" y="33" text-anchor="middle" dominant-baseline="central">&#198;</text>
+    </svg>
+    <span class="wm"><span class="wm__name">aion<i class="wm__sep">·</i>edu</span>
+      <span class="wm__tag">accreditation federation</span></span>
+  </a>
+  <div class="topbar__right">
+    <span class="muted" style="font-size:var(--fs-sm)">epoch</span><span class="pill" id="epoch">0</span>
+    <button class="btn btn--ghost btn--sm" id="advance">Advance ▸</button>
+    <button class="btn btn--ghost btn--sm" id="refresh">↻ Refresh</button>
+    <a class="navlink" href="/learn">← Classroom</a>
+  </div>
+</header>
+
+<main class="container fedmain">
+  <section class="card span">
+    <p class="eyebrow">Federation state</p>
+    <div class="grid-3">
+      <div>
+        <div class="colhead">Recognitions</div>
+        <table class="table"><thead><tr><th>by</th><th>recognizes</th><th>now</th></tr></thead><tbody id="recs"></tbody></table>
+      </div>
+      <div>
+        <div class="colhead">Joint programs</div>
+        <table class="table"><thead><tr><th>program</th><th>quorum</th><th>institutions</th></tr></thead><tbody id="progs"></tbody></table>
+      </div>
+      <div>
+        <div class="colhead">Snapshots</div>
+        <table class="table"><thead><tr><th>#</th><th>epoch</th><th>matches</th><th>signers</th></tr></thead><tbody id="snaps"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Layer 1 · Recognition</p>
+    <fieldset><legend>cross-certify (optional expiry)</legend>
+      <div class="form-row">
+        <span class="lbl">by</span><input class="input input--inline" id="r_by" value="aion-edu">
+        <span class="lbl">recognizes</span><input class="input input--inline" id="r_of" value="partner-u">
+        <span class="lbl">until epoch</span><input class="input input--inline" style="width:74px" id="r_until" placeholder="0=open">
+      </div>
+      <div class="cluster" style="margin-top:8px">
+        <button class="btn btn--primary btn--sm" onclick="post('/api/fed/recognize',{by:v('r_by'),of:v('r_of'),until:n('r_until')})">Recognize</button>
+        <button class="btn btn--danger btn--sm" onclick="post('/api/fed/revoke_recognition',{by:v('r_by'),of:v('r_of')})">Revoke</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Layer 2 · Co-accreditation</p>
+    <fieldset><legend>joint program (K-of-N across institutions)</legend>
+      <div class="form-row">
+        <span class="lbl">program</span><input class="input input--inline" style="width:190px" id="p_name" value="jd-systems">
+        <span class="lbl">K</span><input class="input input--inline" style="width:54px" id="p_k" value="2">
+        <span class="lbl">signers (comma)</span><input class="input input--inline" style="width:200px" id="p_sign" value="aion-edu,partner-u">
+      </div>
+      <div class="cluster" style="margin-top:8px">
+        <button class="btn btn--primary btn--sm" onclick="post('/api/fed/accredit',{program:v('p_name'),threshold:n('p_k'),signers:list('p_sign')})">Declare</button>
+      </div>
+    </fieldset>
+    <fieldset><legend>endorse</legend>
+      <div class="form-row">
+        <span class="lbl">program</span><input class="input input--inline" id="e_prog" value="jd-systems">
+        <span class="lbl">by</span><input class="input input--inline" id="e_by" value="aion-edu">
+        <button class="btn btn--primary btn--sm" onclick="post('/api/fed/endorse',{program:v('e_prog'),by:v('e_by')})">Endorse</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Layer 4 · Delegation</p>
+    <fieldset><legend>vouch for a faculty key once</legend>
+      <div class="form-row">
+        <span class="lbl">professor</span><input class="input input--inline" id="d_prof" value="lynch">
+        <span class="lbl">by</span><input class="input input--inline" id="d_by" value="aion-edu">
+        <span class="lbl">until</span><input class="input input--inline" style="width:74px" id="d_until" placeholder="0=open">
+      </div>
+      <div class="cluster" style="margin-top:8px">
+        <button class="btn btn--primary btn--sm" onclick="post('/api/fed/delegate',{professor:v('d_prof'),by:v('d_by'),until:n('d_until')})">Delegate</button>
+        <button class="btn btn--danger btn--sm" onclick="post('/api/fed/revoke_delegation',{professor:v('d_prof'),by:v('d_by')})">Revoke</button>
+      </div>
+    </fieldset>
+    <fieldset><legend>Layer 3 · per-credential vouch</legend>
+      <div class="form-row">
+        <span class="lbl">learner</span><input class="input input--inline" id="i_l" value="alice">
+        <span class="lbl">lesson</span><input class="input input--inline" id="i_les" value="cs440-u1-l1">
+        <span class="lbl">by</span><input class="input input--inline" id="i_by" value="aion-edu">
+        <button class="btn btn--primary btn--sm" onclick="post('/api/fed/issue',{learner:v('i_l'),lesson:v('i_les'),by:v('i_by')})">Counter-sign</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Present &amp; Snapshot</p>
+    <fieldset><legend>verify a credential as an institution</legend>
+      <div class="form-row">
+        <span class="lbl">learner</span><input class="input input--inline" id="x_l" value="alice">
+        <span class="lbl">lesson</span><input class="input input--inline" id="x_les" value="cs440-u1-l1">
+        <span class="lbl">issuer</span><input class="input input--inline" id="x_iss" value="aion-edu">
+        <span class="lbl">to</span><input class="input input--inline" id="x_to" value="partner-u">
+        <span class="lbl">as-of</span><input class="input input--inline" style="width:64px" id="x_asof" placeholder="now">
+      </div>
+      <div class="cluster" style="margin-top:8px">
+        <button class="btn btn--primary btn--sm" onclick="present()">Present</button>
+      </div>
+      <div id="verdict"></div>
+    </fieldset>
+    <fieldset><legend>signed checkpoint</legend>
+      <div class="form-row">
+        <span class="lbl">by</span><input class="input input--inline" id="s_by" value="aion-edu">
+        <button class="btn btn--seal btn--sm" onclick="post('/api/fed/snapshot',{by:v('s_by')})">Snapshot</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <div id="log" class="log span"></div>
+</main>
+
+<script>
+const $=s=>document.querySelector(s), v=id=>document.getElementById(id).value.trim();
+const n=id=>parseInt(document.getElementById(id).value||'0',10)||0;
+const list=id=>v(id).split(',').map(s=>s.trim()).filter(Boolean);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function log(msg,ok){const l=$('#log');const d=document.createElement('div');d.className=ok?'ok':'err';d.innerHTML=(ok?'✓ ':'✗ ')+esc(msg);l.prepend(d);}
+async function post(url,body){
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json(); log(j.msg||JSON.stringify(j), j.ok!==false); refresh();
+}
+function badge(b){return b?'<span class="yes">✓</span>':'<span class="no">✗</span>';}
+async function refresh(){
+  const s=await (await fetch('/api/fed/state')).json();
+  $('#epoch').textContent=s.epoch;
+  $('#recs').innerHTML=s.recognitions.length?s.recognitions.map(r=>`<tr><td>${esc(r.by)}</td><td>${esc(r.of)}</td><td>${badge(r.valid)}</td></tr>`).join(''):'<tr><td colspan=3 class="empty">none</td></tr>';
+  $('#progs').innerHTML=s.programs.length?s.programs.map(p=>`<tr><td>${esc(p.program)}</td><td>${p.valid||0}/${p.threshold||'?'} ${p.met?badge(true):badge(false)}</td><td>${esc((p.institutions||[]).join(', '))}</td></tr>`).join(''):'<tr><td colspan=3 class="empty">none</td></tr>';
+  $('#snaps').innerHTML=s.snapshots.length?s.snapshots.map(x=>`<tr><td>#${x.id}</td><td>${x.epoch}</td><td>${x.matches?'<span class=yes>match</span>':'<span class=no>drift</span>'}</td><td>${esc((x.signers||[]).join(', '))}</td></tr>`).join(''):'<tr><td colspan=4 class="empty">none</td></tr>';
+}
+async function present(){
+  const body={learner:v('x_l'),lesson:v('x_les'),issuer:v('x_iss'),to:v('x_to')};
+  const asof=document.getElementById('x_asof').value.trim(); if(asof!=='')body.as_of=parseInt(asof,10);
+  const j=await (await fetch('/api/fed/present',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+  if(j.ok===false){$('#verdict').innerHTML='<span class="no">'+esc(j.msg)+'</span>';log(j.msg,false);return;}
+  $('#verdict').innerHTML=`valid ${badge(j.credential_valid)} · delegated ${badge(j.faculty_delegated)} · vouched ${badge(j.issuer_vouched)} · recognized ${badge(j.issuer_recognized)} &nbsp;⇒ `+
+    (j.accepted?'<span class="yes">ACCEPTED</span>':'<span class="no">REJECTED</span>');
+  log(`${v('x_to')} → ${v('x_l')}/${v('x_les')}: `+(j.accepted?'ACCEPTED':'REJECTED'), j.accepted);
+}
+$('#advance').onclick=()=>post('/api/fed/advance',{});
+$('#refresh').onclick=refresh;
+refresh();
+</script>
+</body>
+</html>

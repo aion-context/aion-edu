@@ -1,0 +1,10 @@
+[package]
+name = "aion-edu-faculty"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+aion-edu-core.workspace = true
+inventory.workspace = true
