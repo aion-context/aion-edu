@@ -26,6 +26,13 @@ and other institutions can all check independently.
 > end-to-end domain — signing, verification, K-of-N multisig, registry epochs, federation,
 > and fully offline verification — not as a product. See [`docs/POSITIONING.md`](docs/POSITIONING.md).
 
+## ▶ Watch the demo
+
+[![Watch the aion-edu film on YouTube](docs/video-poster.png)](https://youtu.be/_nIzxjYh68k)
+
+A 4½-minute film — the trust spine, the faculty, the institutional layer, and a live AI
+lesson sealed into a verifiable credential. **[Watch on YouTube ▸](https://youtu.be/_nIzxjYh68k)**
+
 ## What's inside
 
 - A **7-crate Rust workspace** (Tiger Style: typed errors, no panics in libraries).
