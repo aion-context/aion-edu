@@ -1,4 +1,12 @@
+<p align="center">
+  <img src="docs/social-preview.png" alt="aion-edu — every credential sealed, signed, verifiable offline" width="760">
+</p>
+
 # aion-edu
+
+[![Built with aion-context](https://img.shields.io/badge/built%20with-aion--context-c9a14e)](https://github.com/aion-context/aion-context)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+![Rust](https://img.shields.io/badge/rust-1.85%2B-dea584?logo=rust&logoColor=white)
 
 **A reference implementation of [aion-context](https://github.com/aion-context/aion-context) — provenance you can build a university on.**
 
